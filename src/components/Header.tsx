@@ -1,8 +1,9 @@
 import React from "react";
+import Nav from "./Nav";
 
 const Header: React.FC = () => {
   return (
-    <div className="pb-96">
+    <div className="mx-64 pb-96">
       <img
         className="absolute ml-32 w-96 left-96"
         src="src/assets/header/moon.png"
@@ -14,18 +15,7 @@ const Header: React.FC = () => {
         alt="Buffy the Vampire Slayer"
       />
       <div className="absolute top-4 right-6">
-        <a
-          href="/doc"
-          className="p-4 text-2xl text-white underline font-lacquer"
-        >
-          Doc
-        </a>
-        <a
-          href="/about"
-          className="p-4 text-2xl text-white underline cursor-pointer font-lacquer"
-        >
-          About
-        </a>
+        <Nav />
       </div>
     </div>
   );
