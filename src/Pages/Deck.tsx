@@ -4,6 +4,7 @@ import Card from "../components/Card";
 import { people as mock } from "./people.json";
 import { useEffect, useState } from "react";
 import { Filters } from "../components/Filter";
+import { gql, useQuery } from "urql";
 
 // const endpoint =
 //   "https://en.wikipedia.org/wiki/List_of_Buffy_the_Vampire_Slayer_characters";
@@ -31,13 +32,25 @@ const options: Filter[] = [
   { species: "Slayer", icon: "🗡️" },
   { species: "Other", icon: "👽" },
 ];
+
+const PeopleQuery = gql`
+  query {
+    allPeople {
+      id
+      name
+    }
+  }
+`;
 const Deck = () => {
+  const [{ data, error }] = useQuery({ query: PeopleQuery });
   const [people, setPeople] = useState(mock);
 
   const filterOnSpecies = (species: string) => {
     const filtered = mock.filter(({ species: spec }) => spec === species);
     setPeople(filtered);
   };
+
+  console.log(data, error, "urql working");
   return (
     <>
       <Filters setFilter={filterOnSpecies} options={options} />
