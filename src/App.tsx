@@ -12,6 +12,12 @@ import Deck from "./Pages/Deck";
 import Episode from "./Pages/Episode";
 import Character from "./Pages/Charater";
 import { loader } from "./components/Loader";
+import { Provider, createClient, cacheExchange, fetchExchange } from "urql";
+
+const client = createClient({
+  url: "http://localhost:3000/",
+  exchanges: [cacheExchange, fetchExchange],
+});
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,7 +33,11 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  return <RouterProvider router={router} fallbackElement={<p>Loading</p>} />;
+  return (
+    <Provider value={client}>
+      <RouterProvider router={router} fallbackElement={<p>Loading</p>} />
+    </Provider>
+  );
 }
 
 export default App;
