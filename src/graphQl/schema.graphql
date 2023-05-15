@@ -1,0 +1,124 @@
+enum PlacesType {
+  EARTH
+  HELL
+  HEAVEN
+  DEMONDEMENSION
+  PAST
+}
+enum SpeciesType {
+  VAMPIRE
+  HUMAN
+  DEMON
+  GOD
+  EXDEMON
+  WATCHER
+  SLAYER
+  WITCH
+}
+
+enum RelationshipType {
+  FRIEND
+  ENEMY
+  LOVER
+  FAMILY
+  MENTOR
+  STUDENT
+  RIVAL
+  PARTNER
+  TEAMMATE
+  ALLY
+  ACQUAINTANCE
+  NEUTRAL
+  UNKNOWN
+}
+
+enum BeingStatus {
+  ALIVE
+  DECEASED
+  UNKNOWN
+}
+
+type Location {
+  name: string
+  type: PlacesType
+}
+
+type Relationship {
+  name: String
+  relationship_type: RelationshipType
+  status: String
+}
+
+type Personality {
+  traits: [String]
+  likes: [String]
+  dislikes: [String]
+  strengths: [String]
+  weaknesses: [String]
+}
+type Appearance {
+  hair_color: String
+  eye_color: String
+  height: String
+  weight: String
+  distinctive_features: String
+}
+
+type Character {
+  id: ID
+  name: String
+  alias: [String]
+  catchPhrase: [String]
+  urlImage: String
+  occupation: String
+  affiliation: [String]
+  species: SpeciesType
+  status: BeingStatus
+  birthplace: String
+  birthdate: String
+  nationality: String
+  abilities: [String]
+  equipment: [String]
+  relationships: [Relationship]
+  appearance: Appearance
+  personality: Personality
+  backstory: String
+  notes: String
+}
+
+type Episode {
+  name: String
+  season: Int
+  episode: Int
+  characters: [Character]
+  mainLocation: Location
+  url: String
+  description: String
+}
+
+type Query {
+  fetchCharacter: [Character!]
+  fetchCharacterBySpecies: [Character!]
+  getCharacter(id: ID!): Character
+}
+
+query fetchCharacterBySpecies($filter: String!) {
+  allPeople(filter: { species: $filter }) {
+    id
+    species
+    urlImage
+    name
+  }
+}
+
+query fetchCharacter {
+  allPeople {
+    ...Character
+  }
+}
+
+query getCharacter($id: ID!) {
+  people(id: $id) {
+    ...Character
+  }
+}

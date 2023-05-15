@@ -1,21 +1,24 @@
 import React from "react";
 import { Character } from "../interfaces";
-import { Species, Badge } from "./Species";
+import { Badge } from "./Species";
 import Age from "./Age";
 import { Link } from "react-router-dom";
 
-const Card: React.FC<Character> = ({
-  id,
-  notes,
-  name,
-  alias,
-  species,
-  occupation,
-  abilities,
-  birthdate,
-  catchPhrase = ["No catchphrase"],
-  urlImage,
-}) => {
+const Card: React.FC<Character> = (
+  {
+    id,
+    notes,
+    name,
+    alias,
+    species,
+    occupation,
+    abilities,
+    birthdate,
+    catchPhrase,
+    urlImage,
+  },
+  noFlip: boolean
+) => {
   return (
     <div className="w-[300px] h-[550px] group perspective">
       <div className="relative w-full h-full duration-1000 preserve-3d group-hover:my-rotate-y-180 bg-[url('src/assets/frames/texture.jpg')] bg-cover rounded-3xl">
@@ -28,9 +31,11 @@ const Card: React.FC<Character> = ({
               alt=""
             />
           </div>
-          <div className="p-2 text-3xl text-black font-almendra">
-            {alias ? alias[0] : "No alias"}
-          </div>
+          {occupation && (
+            <div className="p-1 mt-4 text-xl text-black font-almendra">
+              {occupation}
+            </div>
+          )}
         </div>
         <div className="absolute w-full h-full overflow-hidden border-2 my-rotate-y-180 backface-hidden border-amber-400 rounded-3xl">
           <div className="flex-col justify-between">
@@ -39,7 +44,6 @@ const Card: React.FC<Character> = ({
             </div>
             <div className="w-[280px] h-[400px]  border-amber-400 rounded-3xl border-2 ml-2">
               <Age birthday={birthdate} />
-              {/* <Species species={species} /> */}
               <br />
               <div className="flex text-xl">
                 <div className="p-1 m-1 font-almendra">Occupations: </div>
@@ -48,12 +52,14 @@ const Card: React.FC<Character> = ({
                 </div>
               </div>
               <br />
-              <div className="flex-col text-xl">
-                <div className="p-1 m-1 font-almendra">Abilities: </div>
-                <div className="flex p-1 m-1 text-l rounded-3xl font-lacquer">
-                  {abilities}
+              {abilities && (
+                <div className="flex-col text-xl">
+                  <div className="p-1 m-1 font-almendra">Abilities: </div>
+                  <div className="flex p-1 m-1 text-l rounded-3xl font-lacquer">
+                    {abilities}
+                  </div>
                 </div>
-              </div>
+              )}
               <Link
                 to={`/s1`}
                 className="p-1 text-2xl text-black font-almendra"
@@ -70,9 +76,11 @@ const Card: React.FC<Character> = ({
             <div className="ml-3">
               <Badge icon={species} />
             </div>
-            <div className="p-1 mt-4 text-xl text-black font-almendra">
-              {catchPhrase[0]}
-            </div>
+            {catchPhrase && (
+              <div className="p-1 mt-4 text-xl text-black font-almendra">
+                {catchPhrase}
+              </div>
+            )}
           </div>
         </div>
       </div>

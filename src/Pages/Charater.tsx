@@ -1,25 +1,49 @@
 import { Link, useParams } from "react-router-dom";
-import { people } from "./people.json";
+import { gql, useQuery } from "urql";
 import Card from "../components/Card";
+import { useEffect, useState } from "react";
+
+const Person = gql`
+  query ($id: ID!) {
+    Person(id: $id) {
+      id
+      species
+      urlImage
+      relationships
+      name
+    }
+  }
+`;
 
 const Character = () => {
+  const [zchar, setzChar] = useState([]);
   const { charId } = useParams();
-  const char = parseInt(charId);
-  const person = people.find(({ id }) => id === char);
+  const deString = charId?.replace(/['"]+/g, "");
+
+  const [{ data }] = useQuery({
+    query: Person,
+    variables: { id: deString },
+  });
+
+  useEffect(() => {
+    if (data) {
+      setzChar(data?.Person);
+    }
+  }, [data]);
   return (
     <div className="flex justify-between mx-auto text-center animate-fadeInRight">
-      <Card {...person} />
+      <Card {...zchar} />
       <div className="flex-col">
         <div className="mb-3 ml-2 text-3xl bg-cover font-almendra bg-texture rounded-2xl">
-          Lovers
-          {person &&
-            person?.relationships.map((person, i) => (
+          Close Friends
+          {zchar.relationships &&
+            zchar.relationships.map((char, i) => (
               <div key={i} className="p-1 text-3xl">
                 <Link
                   className="text-2xl hover:text-red-900 "
-                  to={`/${person.id}`}
+                  to={`/${char.id}`}
                 >
-                  {person.name}
+                  {char.name}
                 </Link>
               </div>
             ))}

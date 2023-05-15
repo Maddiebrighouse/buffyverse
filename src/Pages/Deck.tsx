@@ -1,21 +1,10 @@
 // import axios from "axios";
 import { Link } from "react-router-dom";
 import Card from "../components/Card";
-import { people as mock } from "./people.json";
 import { useEffect, useState } from "react";
 import { Filters } from "../components/Filter";
 import { gql, useQuery } from "urql";
 
-// const endpoint =
-//   "https://en.wikipedia.org/wiki/List_of_Buffy_the_Vampire_Slayer_characters";
-// const params = {
-//   origin: "*",
-// };
-
-// const getWiki = async () => {
-//   const wiki = await axios.get(endpoint);
-//   return wiki;
-// };
 export type Filter = {
   species: string;
   icon: string;
@@ -33,27 +22,58 @@ const options: Filter[] = [
   { species: "Other", icon: "👽" },
 ];
 
-const PeopleQuery = gql`
+//write query to get filter by species urql
+const PeopleBySpecies = gql`
   query {
-    allPeople {
+    allPeople(species: "Human") {
       id
+      species
+      urlImage
       name
     }
   }
 `;
+const People = gql`
+  query {
+    allPeople {
+      id
+      species
+      alias
+      occupation
+      status
+      urlImage
+      affiliation
+      name
+    }
+  }
+`;
+
+//TODO: Other filters + Key
+
 const Deck = () => {
-  const [{ data, error }] = useQuery({ query: PeopleQuery });
-  const [people, setPeople] = useState(mock);
+  const [people, setPeople] = useState([]);
+  const [filter, setFilter] = useState<string | null>(null);
+  const [{ data, error }] = useQuery({
+    query: People,
+  });
+  useEffect(() => {
+    if (data) {
+      setPeople(data.allPeople);
+    }
+  }, [data]);
 
-  const filterOnSpecies = (species: string) => {
-    const filtered = mock.filter(({ species: spec }) => spec === species);
-    setPeople(filtered);
-  };
-
-  console.log(data, error, "urql working");
+  useEffect(() => {
+    if (filter) {
+      const filterd = data.allPeople.filter(
+        (person) => person.species === filter
+      );
+      setPeople(filterd);
+    }
+  }, [filter]);
+  console.log(error);
   return (
     <>
-      <Filters setFilter={filterOnSpecies} options={options} />
+      <Filters setFilter={setFilter} options={options} />
       <div className="grid grid-cols-3 gap-8 px-8 text-center animate-fadeUp animate-fadeDown max-w-7xl">
         {people.map((person, i) => (
           <Link to={`${person.id}`} key={i}>
