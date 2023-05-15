@@ -15,7 +15,7 @@ type Props = {
 };
 const Age = ({ birthday = "October 23, 1980" }: Props) => {
   const age = getAge(birthday);
-  console.log(age, "age");
+
   return (
     <div className="relative">
       <p className="absolute z-10 p-2 text-5xl text-black -pl-10 right-20 opacity-80 -rotate-12 -top-8 font-lacquer">

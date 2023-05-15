@@ -1,12 +1,24 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { Filter } from "../Pages/Deck";
 
 type Props = {
   options: Filter[];
-  setFilter: (species: string) => void;
+  setFilter: (species: string | null) => void;
 };
 export const Filters: React.FC<Props> = ({ options, setFilter }) => {
+  const [selected, setSelected] = useState<string | null>(null);
+
+  const handleClick = (species: string) => {
+    if (species === selected) {
+      setSelected(null);
+      setFilter(null);
+    } else {
+      setSelected(species);
+      setFilter(species);
+    }
+  };
+
   return (
     <>
       <Popover className="relative">
@@ -31,8 +43,8 @@ export const Filters: React.FC<Props> = ({ options, setFilter }) => {
               {options.map((item: Filter) => (
                 <button
                   key={item.species}
-                  onClick={() => setFilter(item.species)}
-                  className="block p-2 hover:text-red-800"
+                  onClick={() => handleClick(item.species)}
+                  className="block p-2 hover:text-red-800 active:bg-violet-700"
                 >
                   {item.icon}
                   {item.species}
