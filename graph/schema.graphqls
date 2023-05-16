@@ -1,0 +1,108 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Character {
+  id: ID!
+  name: String!
+  alias: String!
+  species: Species!
+  occupation: String!
+  abilities: [String!]!
+  coverImage: String!
+  equipment: [String!]!
+  birthDate: String!
+  deathDate: String
+  relationships: [Character!]
+  personality: [Personality!]
+  firstAppearsIn: FirstAppearsIn!
+  starredIn: [Show!]
+  backStory: String!
+  notes: String
+}
+
+type BuffyVerse {
+  angel: Character!
+  buffy: Character!
+}
+type Death {
+  episode: Episode!
+  cause: String!
+  killedBy: Character!
+}
+type Personality {
+  trait: String!
+  description: String!
+  weakness: [String]!
+  strength: [String]!
+  powers: [String]!
+}
+
+type FirstAppearsIn {
+  episode: Episode!
+  location: Location!
+}
+
+type Episode {
+  id: ID!
+  season: Int!
+  episode: Int!
+  name: String!
+}
+
+type Location {
+  id: ID!
+  image: String!
+  name: String!
+  type: LocationType!
+  dimension: String!
+}
+
+enum Species {
+  HUMAN
+  VAMPIRE
+  DEMON
+  WITCH
+  SLAYER
+  GHOST
+  DEMONCYBORG
+  WEREWOLF
+  HELLGOD
+  EXDEMON
+  ROBOT
+}
+
+enum LocationType {
+  EARTH
+  DEMONDIMENSION
+  HEAVEN
+  HELL
+  ALTEREDDIMENSION
+  THELIBRARY
+  THEBROZONE
+  SUNNYDALE
+  SUNNYDALEHIGH
+  THEBRONZE
+  THEMAGICBOX
+  THEINITIATIVE
+  THEHELLMOUTH
+}
+
+enum Show {
+  BUFFY
+  ANGEL
+  COMICS
+}
+
+type Query {
+  getAllChar: [Character!]!
+}
+
+type Mutation {
+  createTodo(input: NewTodo!): Todo!
+}
