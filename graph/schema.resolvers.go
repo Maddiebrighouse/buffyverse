@@ -11,14 +11,14 @@ import (
 	"gitlab.com/pragmticreviews/graphql-server/graph/model"
 )
 
-// CreateTodo is the resolver for the createTodo field.
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: CreateTodo - createTodo"))
-}
+// AddPerson is the resolver for the AddPerson field.
+// func (r *mutationResolver) AddPerson(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
+// 	panic(fmt.Errorf("not implemented: AddPerson - AddPerson"))
+// }
 
-// Todos is the resolver for the todos field.
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: Todos - todos"))
+// People is the resolver for the people field.
+func (r *queryResolver) People(ctx context.Context) ([], error) {
+	panic(fmt.Errorf("not implemented: People - People"))
 }
 
 // Mutation returns MutationResolver implementation.

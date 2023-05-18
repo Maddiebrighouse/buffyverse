@@ -4,7 +4,6 @@
 
 schema {
   query: Query
-  mutation: Mutation
 }
 
 type Character {
@@ -83,14 +82,6 @@ enum LocationType {
   HEAVEN
   HELL
   ALTEREDDIMENSION
-  THELIBRARY
-  THEBROZONE
-  SUNNYDALE
-  SUNNYDALEHIGH
-  THEBRONZE
-  THEMAGICBOX
-  THEINITIATIVE
-  THEHELLMOUTH
 }
 
 enum Show {
@@ -100,9 +91,7 @@ enum Show {
 }
 
 type Query {
-  getAllChar: [Character!]!
-}
-
-type Mutation {
-  createTodo(input: NewTodo!): Todo!
+  characters: [Character!]!
+  character(id: ID!): Character!
+  locations: [Location!]!
 }
