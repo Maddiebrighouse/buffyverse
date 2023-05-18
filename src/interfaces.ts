@@ -1,6 +1,6 @@
 interface Location {
   name: string;
-  type: "Earth" | "Hell" | "Heaven" | "Demon-Demension" | "Past";
+  type: "Earth" | "Hell" | "Heaven" | "Demon-Dimension" | "Past";
 }
 
 export interface Character {
