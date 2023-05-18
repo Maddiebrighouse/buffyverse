@@ -1,7 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { gql, useQuery } from "urql";
 import Card from "../components/Card";
-import { useEffect, useState } from "react";
 
 const Person = gql`
   query ($id: ID!) {
@@ -16,28 +15,23 @@ const Person = gql`
 `;
 
 const Character = () => {
-  const [zchar, setzChar] = useState([]);
   const { charId } = useParams();
   const deString = charId?.replace(/['"]+/g, "");
 
-  const [{ data }] = useQuery({
+  const [{ data, fetching, error }] = useQuery({
     query: Person,
     variables: { id: deString },
   });
 
-  useEffect(() => {
-    if (data) {
-      setzChar(data?.Person);
-    }
-  }, [data]);
+  console.log(error, "err");
   return (
     <div className="flex justify-between mx-auto text-center animate-fadeInRight">
-      <Card {...zchar} />
+      {!fetching && data.Person && <Card {...data.Person} />}
       <div className="flex-col">
         <div className="mb-3 ml-2 text-3xl bg-cover font-almendra bg-texture rounded-2xl">
           Close Friends
-          {zchar.relationships &&
-            zchar.relationships.map((char, i) => (
+          {/* {data.Person.relationships &&
+            data.Person.relationships.map((char, i) => (
               <div key={i} className="p-1 text-3xl">
                 <Link
                   className="text-2xl hover:text-red-900 "
@@ -46,11 +40,11 @@ const Character = () => {
                   {char.name}
                 </Link>
               </div>
-            ))}
+            ))} */}
         </div>
         {/* <div className="p-2 ml-2 text-3xl bg-cover font-almendra bg-texture rounded-2xl">
           Killed By
-          {died.map(({ killedBy, date }, i) => (
+          {data.Person.relationships.map(({ killedBy, date }, i) => (
             <div key={i} className="flex-col">
               <Link
                 className="text-2xl hover:text-red-900 "
