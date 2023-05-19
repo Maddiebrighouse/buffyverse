@@ -1,78 +1,63 @@
 package main
 
 import (
+	"context"
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 
-	"github.com/graphql-go/graphql"
+	_ "github.com/lib/pq"
 
+	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/graphql-go/handler"
+
+	"github.com/madeleineb/buffyverse/schema"
 )
 
+type Resolver struct {
+	DB *sql.DB
+}
+
+func (r *Resolver) People(ctx context.Context) ([]Person, error) {
+	db := r.DB
+	users, err := FetchPeople(db)
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+
+func (r *Resolver) Person(ctx context.Context, args struct{ ID string }) (*Person, error) {
+	db := r.DB
+	user, err := GetPerson(db, args.ID)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
 func main() {
-	// Define your types
-	var personType = graphql.NewObject(
-		graphql.ObjectConfig{
-			Name: "Person",
-			Fields: graphql.Fields{
-				"id": &graphql.Field{
-					Type: graphql.Int,
-				},
-				"name": &graphql.Field{
-					Type: graphql.String,
-				},
-				"age": &graphql.Field{
-					Type: graphql.Int,
-				},
-			},
-		},
-	)
-	// Define your root query
-	var queryType = graphql.NewObject(
-		graphql.ObjectConfig{
-			Name: "Query",
-			Fields: graphql.Fields{
-				"person": &graphql.Field{
-					Type: personType,
-					Args: graphql.FieldConfigArgument{
-						"id": &graphql.ArgumentConfig{
-							Type: graphql.String,
-						},
-					},
-					Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-						// Resolve the query and return the result
-						// For example, fetch user data from a database
-						id, ok := params.Args["id"].(string)
-						if ok {
-							// Fetch user data by ID
-							// Replace with your actual implementation
-							user := getUserByID(id)
-							return user, nil
-						}
-						return nil, nil
-					},
-				},
-			},
-		},
-	)
+	// Create a new connection to our pg database
+	db, err := sql.Open("postgres", "postgresql://localhost:5432/buffy_verse_1?sslmode=disable")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
 
-	// Define your schema
-	var schema, _ = graphql.NewSchema(
-		graphql.SchemaConfig{
-			Query: queryType,
-		},
-	)
+	schema, err := schema.LoadSchema("/Users/madeleineb/workspace/buffyverse/schema.graphqls")
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	// Create a new handler with the GraphQL schema
-	graphqlHandler := handler.New(&handler.Config{
-		Schema:   &schema,
-		Pretty:   true,
-		GraphiQL: true,
-	})
+	resolvers := &Resolver{
+		DB: db,
+	}
 
-	// Use the handler as the HTTP handler for /graphql
+	// Create a new handler with the GraphQL schema and resolvers
+	graphqlHandler := handler.NewDefaultServer(schema)
+	graphqlHandler.SetQueryResolver(resolvers)
+
 	http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
 		graphqlHandler.ServeHTTP(w, r)
 	})
@@ -90,14 +75,4 @@ func main() {
 
 	// Keep the main goroutine alive
 	select {}
-}
-
-// Replace with your actual implementation
-func getUserByID(id string) map[string]interface{} {
-	// Replace with your actual database call
-	return map[string]interface{}{
-		"id":   1,
-		"name": "Bob",
-		"age":  20,
-	}
 }

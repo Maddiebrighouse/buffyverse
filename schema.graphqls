@@ -1,45 +1,25 @@
-# GraphQL schema example
-#
-# https://gqlgen.com/getting-started/
-
 schema {
   query: Query
 }
 
-type Character {
+type Person {
   id: ID!
   name: String!
   alias: String!
   species: Species!
   occupation: String!
   abilities: [String!]!
-  coverImage: String!
-  equipment: [String!]!
-  birthDate: String!
+  imageUrl: String!
+  age: Int!
   deathDate: String
-  relationships: [Character!]
-  personality: [Personality!]
+  relationships: [Person!]
   firstAppearsIn: FirstAppearsIn!
   starredIn: [Show!]
-  backStory: String!
-  notes: String
 }
 
 type BuffyVerse {
-  angel: Character!
-  buffy: Character!
-}
-type Death {
-  episode: Episode!
-  cause: String!
-  killedBy: Character!
-}
-type Personality {
-  trait: String!
-  description: String!
-  weakness: [String]!
-  strength: [String]!
-  powers: [String]!
+  angel: Person!
+  buffy: Person!
 }
 
 type FirstAppearsIn {
@@ -91,7 +71,6 @@ enum Show {
 }
 
 type Query {
-  characters: [Character!]!
-  character(id: ID!): Character!
-  locations: [Location!]!
+  people: [Person!]!
+  person(id: ID!): Person!
 }
