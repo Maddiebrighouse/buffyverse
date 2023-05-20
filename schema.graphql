@@ -1,0 +1,15 @@
+schema {
+  query: Query
+}
+
+type Person {
+  id: String!
+  name: String!
+  alias: String!
+  imageUrl: String!
+  age: Int!
+}
+
+type Query {
+  people: [Person!]!
+}
