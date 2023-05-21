@@ -19,12 +19,13 @@ type Query struct {
 }
 
 type Person struct {
-	ID       int    `json:"id"`
-	Name     string `json:"name"`
-	Alias    string `json:"alias"`
-	Species  string `json:"species"`
-	ImageURL string `json:"imageUrl"`
-	Age      int32  `json:"age"`
+	ID         int    `json:"id"`
+	Name       string `json:"name"`
+	Alias      string `json:"alias"`
+	Species    string `json:"species"`
+	ImageURL   string `json:"imageUrl"`
+	Age        int32  `json:"age"`
+	Occupation string `json:"occupation"`
 }
 
 type PersonResolver struct {
@@ -41,12 +42,13 @@ func init() {
 
 func (q *Query) Person(ctx context.Context, args struct{ ID string }) (*PersonResolver, error) {
 	db := q.DB
-	row := db.QueryRow(ctx, "SELECT id, name, alias, species, image_url, age FROM person WHERE id = $1", args.ID)
+	row := db.QueryRow(ctx, "SELECT id, name, alias, species, image_url, age, occupation FROM person WHERE id = $1", args.ID)
 
 	var p Person
 	err := row.Scan(
 		&p.ID, &p.Name, &p.Alias,
 		&p.Species, &p.ImageURL, &p.Age,
+		&p.Occupation,
 	)
 	if err != nil {
 		return nil, err
@@ -141,13 +143,12 @@ func (p *PersonResolver) Species() string {
 	return p.Person.Species
 }
 
-// func (p *PersonResolver) Occupation() string {
-// 	return p.Person.Occupation
-// }
+func (p *PersonResolver) Occupation() string {
+	return p.Person.Occupation
+}
 
 func main() {
 	path := os.Getenv("DATABASE_URL")
-	fmt.Println(path)
 	config, err := pgxpool.ParseConfig(path)
 	if err != nil {
 		log.Fatal(err)
