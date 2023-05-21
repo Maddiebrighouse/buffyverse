@@ -5,18 +5,7 @@ import Age from "./Age";
 import { Link } from "react-router-dom";
 
 const Card: React.FC<Character> = (
-  {
-    id,
-    notes,
-    name,
-    alias,
-    species,
-    occupation,
-    abilities,
-    birthdate,
-    catchPhrase,
-    urlImage,
-  },
+  { id, name, alias, species, imageUrl, age, occupation },
   noFlip: boolean
 ) => {
   return (
@@ -27,15 +16,13 @@ const Card: React.FC<Character> = (
           <div className="m-2 border-4 border-amber-400 rounded-3xl">
             <img
               className="object-cover w-[280px] grayscale h-[400px] rounded-2xl"
-              src={urlImage}
+              src={imageUrl}
               alt=""
             />
           </div>
-          {occupation && (
-            <div className="p-1 mt-4 text-xl text-black font-almendra">
-              {occupation}
-            </div>
-          )}
+          <div className="p-1 mt-4 text-xl text-black font-almendra">
+            {alias}
+          </div>
         </div>
         <div className="absolute w-full h-full overflow-hidden border-2 my-rotate-y-180 backface-hidden border-amber-400 rounded-3xl">
           <div className="flex-col justify-between">
@@ -43,7 +30,7 @@ const Card: React.FC<Character> = (
               {name}
             </div>
             <div className="w-[280px] h-[400px]  border-amber-400 rounded-3xl border-2 ml-2">
-              <Age birthday={birthdate} />
+              <Age birthday={age} />
               <br />
               <div className="flex text-xl">
                 <div className="p-1 m-1 font-almendra">Occupations: </div>
@@ -52,35 +39,16 @@ const Card: React.FC<Character> = (
                 </div>
               </div>
               <br />
-              {abilities && (
-                <div className="flex-col text-xl">
-                  <div className="p-1 m-1 font-almendra">Abilities: </div>
-                  <div className="flex p-1 m-1 text-l rounded-3xl font-lacquer">
-                    {abilities}
-                  </div>
-                </div>
-              )}
               <Link
                 to={`/s1`}
                 className="p-1 text-2xl text-black font-almendra"
               >
                 First Seen: S01E01
               </Link>
-              {/* <Debut debut={debut} /> */}
-              {/* <div className="flex justify-evenly">
-                <button className="font-lacquer">Kills</button>
-                <button className="font-lacquer">RIP</button>
-                <button className="font-lacquer">Loves</button>
-              </div> */}
             </div>
             <div className="ml-3">
               <Badge icon={species} />
             </div>
-            {catchPhrase && (
-              <div className="p-1 mt-4 text-xl text-black font-almendra">
-                {catchPhrase}
-              </div>
-            )}
           </div>
         </div>
       </div>

@@ -12,20 +12,29 @@ import (
 	"github.com/graph-gophers/graphql-go/relay"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/joho/godotenv"
+	"github.com/rs/cors"
 )
 
 type Query struct {
 	DB *pgxpool.Pool
 }
 
+// type RelationShip struct {
+// 	ID          int    `json:"id"`
+// 	Name        string `json:"name"`
+// 	Type        string `json:"type"`
+// 	Description string `json:"description"`
+// }
+
 type Person struct {
-	ID         int    `json:"id"`
-	Name       string `json:"name"`
-	Alias      string `json:"alias"`
-	Species    string `json:"species"`
-	ImageURL   string `json:"imageUrl"`
-	Age        int32  `json:"age"`
-	Occupation string `json:"occupation"`
+	ID         int     `json:"id"`
+	Name       string  `json:"name"`
+	Alias      string  `json:"alias"`
+	Species    *string `json:"species"`
+	ImageURL   string  `json:"imageUrl"`
+	Age        int32   `json:"age"`
+	Occupation string  `json:"occupation"`
+	// RelationShips []RelationShip `json:"relationShips"`
 }
 
 type PersonResolver struct {
@@ -57,9 +66,17 @@ func (q *Query) Person(ctx context.Context, args struct{ ID string }) (*PersonRe
 	return &PersonResolver{Person: &p}, nil
 }
 
-func (q *Query) People(ctx context.Context) ([]*PersonResolver, error) {
+func (q *Query) People(ctx context.Context, args struct{ Species *string }) ([]*PersonResolver, error) {
 	db := q.DB
-	rows, err := db.Query(ctx, "SELECT id, name, alias, species,image_url, age FROM person")
+	query := "SELECT id, name, alias, species, image_url, age, occupation FROM person"
+	var queryArgs []interface{}
+
+	if args.Species != nil {
+		query += " WHERE species = $1"
+		queryArgs = append(queryArgs, *args.Species)
+	}
+
+	rows, err := db.Query(ctx, query, queryArgs...)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
@@ -73,6 +90,7 @@ func (q *Query) People(ctx context.Context) ([]*PersonResolver, error) {
 		err := rows.Scan(
 			&p.ID, &p.Name, &p.Alias,
 			&p.Species, &p.ImageURL, &p.Age,
+			&p.Occupation,
 		)
 		if err != nil {
 			fmt.Println(err)
@@ -87,36 +105,6 @@ func (q *Query) People(ctx context.Context) ([]*PersonResolver, error) {
 	}
 
 	return people, nil
-}
-
-func (q *Query) PeopleBySpecies(ctx context.Context, args struct{ Species string }) ([]*PersonResolver, error) {
-	db := q.DB
-	rows, err := db.Query(ctx, "SELECT id, name, alias, species, image_url, age FROM person WHERE species = $1", args.Species)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var people []*PersonResolver
-
-	for rows.Next() {
-		var p Person
-		err := rows.Scan(
-			&p.ID, &p.Name, &p.Alias,
-			&p.Species, &p.ImageURL, &p.Age,
-		)
-		if err != nil {
-			return nil, err
-		}
-		people = append(people, &PersonResolver{Person: &p})
-	}
-
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return people, nil
-
 }
 
 func (p *PersonResolver) ID() string {
@@ -139,13 +127,21 @@ func (p *PersonResolver) Age() int32 {
 	return p.Person.Age
 }
 
-func (p *PersonResolver) Species() string {
+func (p *PersonResolver) Species() *string {
 	return p.Person.Species
 }
 
 func (p *PersonResolver) Occupation() string {
 	return p.Person.Occupation
 }
+
+// func (p *PersonResolver) RelationShips() []*RelationShipResolver {
+// 	var relationShips []*RelationShipResolver
+// 	for _, r := range p.Person.RelationShips {
+// 		relationShips = append(relationShips, &RelationShipResolver{RelationShip: &r})
+// 	}
+// 	return relationShips
+// }
 
 func main() {
 	path := os.Getenv("DATABASE_URL")
@@ -169,28 +165,20 @@ func main() {
 
 	// Create a GraphQL endpoint handler using the schema
 	graphQLHandler := &relay.Handler{Schema: gqlSchema}
-	// Define a middleware handler to enable CORS
-	corsHandler := func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			// Set CORS headers
-			w.Header().Set("Access-Control-Allow-Origin", "*")
-			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
-			// Handle preflight requests for CORS
-			if r.Method == http.MethodOptions {
-				return
-			}
-
-			// Call the next handler
-			next.ServeHTTP(w, r)
-		})
-	}
+	// Define CORS options
+	corsOptions := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
+		AllowedHeaders:   []string{"Content-Type"},
+		AllowCredentials: true,
+	})
 
 	// Wrap the GraphQL handler with the CORS middleware
-	http.Handle("/graphql", corsHandler(graphQLHandler))
+	handler := corsOptions.Handler(graphQLHandler)
 
 	http.HandleFunc("/", servePlayground)
+	http.Handle("/graphql", handler)
 
 	fmt.Println("Server is running on http://localhost:8080/")
 	log.Fatal(http.ListenAndServe(":8080", nil))

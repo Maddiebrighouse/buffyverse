@@ -2,18 +2,25 @@ schema {
   query: Query
 }
 
+type Relationship {
+  id: String!
+  name: String!
+  type: String!
+  description: String!
+}
+
 type Person {
   id: String!
   name: String!
   alias: String!
-  species: String!
+  species: String
   imageUrl: String!
   age: Int!
   occupation: String!
+  # relationships: [Relationship!]!
 }
 
 type Query {
-  people: [Person!]!
+  people(species: String): [Person!]!
   person(id: String!): Person!
-  peopleBySpecies(species: String!): [Person!]!
 }
