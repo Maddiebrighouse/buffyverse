@@ -11,6 +11,7 @@ import (
 	"github.com/graph-gophers/graphql-go"
 	"github.com/graph-gophers/graphql-go/relay"
 	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/joho/godotenv"
 )
 
 type Query struct {
@@ -21,17 +22,74 @@ type Person struct {
 	ID       int    `json:"id"`
 	Name     string `json:"name"`
 	Alias    string `json:"alias"`
+	Species  string `json:"species"`
 	ImageURL string `json:"imageUrl"`
 	Age      int32  `json:"age"`
 }
 
 type PersonResolver struct {
 	Person *Person
+	People []*Person
+}
+
+func init() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (q *Query) Person(ctx context.Context, args struct{ ID string }) (*PersonResolver, error) {
+	db := q.DB
+	row := db.QueryRow(ctx, "SELECT id, name, alias, species, image_url, age FROM person WHERE id = $1", args.ID)
+
+	var p Person
+	err := row.Scan(
+		&p.ID, &p.Name, &p.Alias,
+		&p.Species, &p.ImageURL, &p.Age,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &PersonResolver{Person: &p}, nil
 }
 
 func (q *Query) People(ctx context.Context) ([]*PersonResolver, error) {
 	db := q.DB
-	rows, err := db.Query(ctx, "SELECT id, name, alias, image_url, age FROM person")
+	rows, err := db.Query(ctx, "SELECT id, name, alias, species,image_url, age FROM person")
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	var people []*PersonResolver
+
+	for rows.Next() {
+		var p Person
+		err := rows.Scan(
+			&p.ID, &p.Name, &p.Alias,
+			&p.Species, &p.ImageURL, &p.Age,
+		)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+		people = append(people, &PersonResolver{Person: &p})
+	}
+
+	if err := rows.Err(); err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	return people, nil
+}
+
+func (q *Query) PeopleBySpecies(ctx context.Context, args struct{ Species string }) ([]*PersonResolver, error) {
+	db := q.DB
+	rows, err := db.Query(ctx, "SELECT id, name, alias, species, image_url, age FROM person WHERE species = $1", args.Species)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +101,7 @@ func (q *Query) People(ctx context.Context) ([]*PersonResolver, error) {
 		var p Person
 		err := rows.Scan(
 			&p.ID, &p.Name, &p.Alias,
-			&p.ImageURL, &p.Age,
+			&p.Species, &p.ImageURL, &p.Age,
 		)
 		if err != nil {
 			return nil, err
@@ -56,6 +114,7 @@ func (q *Query) People(ctx context.Context) ([]*PersonResolver, error) {
 	}
 
 	return people, nil
+
 }
 
 func (p *PersonResolver) ID() string {
@@ -78,8 +137,18 @@ func (p *PersonResolver) Age() int32 {
 	return p.Person.Age
 }
 
+func (p *PersonResolver) Species() string {
+	return p.Person.Species
+}
+
+// func (p *PersonResolver) Occupation() string {
+// 	return p.Person.Occupation
+// }
+
 func main() {
-	config, err := pgxpool.ParseConfig("postgresql://localhost:5432/buffy_verse_1?sslmode=disable")
+	path := os.Getenv("DATABASE_URL")
+	fmt.Println(path)
+	config, err := pgxpool.ParseConfig(path)
 	if err != nil {
 		log.Fatal(err)
 	}
