@@ -167,7 +167,29 @@ func main() {
 	query := &Query{DB: pool}
 	gqlSchema := graphql.MustParseSchema(schemaString, query)
 
-	http.Handle("/graphql", &relay.Handler{Schema: gqlSchema})
+	// Create a GraphQL endpoint handler using the schema
+	graphQLHandler := &relay.Handler{Schema: gqlSchema}
+	// Define a middleware handler to enable CORS
+	corsHandler := func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// Set CORS headers
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+			// Handle preflight requests for CORS
+			if r.Method == http.MethodOptions {
+				return
+			}
+
+			// Call the next handler
+			next.ServeHTTP(w, r)
+		})
+	}
+
+	// Wrap the GraphQL handler with the CORS middleware
+	http.Handle("/graphql", corsHandler(graphQLHandler))
+
 	http.HandleFunc("/", servePlayground)
 
 	fmt.Println("Server is running on http://localhost:8080/")
