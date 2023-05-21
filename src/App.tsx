@@ -15,7 +15,7 @@ import { loader } from "./components/Loader";
 import { Provider, createClient, cacheExchange, fetchExchange } from "urql";
 
 const client = createClient({
-  url: "http://localhost:8080/",
+  url: "http://localhost:8080/graphql",
   exchanges: [cacheExchange, fetchExchange],
 });
 
