@@ -6,7 +6,8 @@ const Docs = () => {
           Doc's Page
         </div>
         <p className="text-2xl font-lacquer">
-          This is the Docs page. It's a placeholder for now.
+          This is the Docs page. It's a placeholder for now. How to use the API
+          will go here...
         </p>
       </div>
     </div>
