@@ -57,15 +57,14 @@ export const Filters: React.FC<Props> = ({ setFilter }) => {
           leaveTo="opacity-0 translate-y-1"
         >
           <Popover.Panel className="absolute z-10 flex w-screen pl-8 mt-5 -translate-x-3/4 max-w-min">
-            <div className="w-48 p-4 text-3xl text-gray-900 bg-cover shadow-lg font-longCang bg-texture shrink rounded-xl ring-1 ring-gray-900/5">
+            <div className="p-4 text-3xl text-white bg-cover shadow-lg w-52 font-longCang shrink rounded-xl ring-1 ring-gray-900/5">
               {options.map((item: Filter) => (
                 <button
                   key={item.species}
                   onClick={() => handleClick(item.species)}
                   className="block p-2 hover:text-red-800 active:bg-violet-700"
                 >
-                  {item.icon}
-                  {item.species}
+                  {item.icon} {item.species}
                 </button>
               ))}
             </div>
