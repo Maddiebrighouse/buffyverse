@@ -39,7 +39,6 @@ const Card: React.FC<Props> = ({
             <Age age={age} />
             <br />
             <div className="flex m-1 text-3xl text-black">{name}</div>
-            <br />
             <div className="flex text-xl">
               <div className="p-1 m-1">Species: </div>
               <div className="pt-1 m-1">{species}</div>
