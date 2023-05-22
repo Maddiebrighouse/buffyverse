@@ -1,7 +1,6 @@
 const defaultIcon = "src/assets/icons/watcher.png";
 
 const whichIcon = (species: string) => {
-  //TODO: fix this
   switch (species) {
     case "Human":
       return "src/assets/icons/loves.png";
@@ -28,7 +27,7 @@ const whichIcon = (species: string) => {
   }
 };
 
-export const Badge = (icon: string) => {
+export const Badge = ({ icon }: string) => {
   const speciesIcon = whichIcon(icon);
   return (
     <div className="relative">
@@ -40,17 +39,6 @@ export const Badge = (icon: string) => {
 
         <p className="pt-2 pl-1 text-2xl text-black font-grenze"></p>
       </div>
-    </div>
-  );
-};
-
-// TODO fail back to default image
-export const Species = (species: string) => {
-  const speciesIcon = whichIcon(species);
-  return (
-    <div className="flex justify-center pt-6">
-      <img className="w-8" src={speciesIcon} alt="stack" />
-      <div className="px-2 pt-2 text-2xl font-grenze">{species}</div>
     </div>
   );
 };
