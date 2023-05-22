@@ -21,7 +21,7 @@ const Deck = () => {
   }
   return (
     <>
-      <Filters setFilter={setFilter} options={options} />
+      <Filters setFilter={setFilter} />
       <div className="grid grid-cols-3 gap-8 px-8 text-center animate-fadeUp animate-fadeDown max-w-7xl">
         {!fetching &&
           data.people &&
