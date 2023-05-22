@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import Card from "../components/Card";
-import { useEffect, useState } from "react";
 import { Filters } from "../components/Filter";
-import { gql, useQuery } from "urql";
-import { Character } from "../interfaces";
+import { useState } from "react";
+import Loader from "../components/Loader";
+import { useGetPeopleQuery, Person } from "../graphql/graphql";
 
 export type Filter = {
   species: string;
@@ -23,40 +23,28 @@ const options: Filter[] = [
 ];
 
 const Deck = () => {
-  const [filter, setFilter] = useState<string>("Human");
-  //write query to get filter by species urql
-  const PeopleQuery = gql`
-    query ($species: String) {
-      people(species: $species) {
-        id
-        name
-        age
-        species
-        alias
-        imageUrl
-      }
-    }
-  `;
+  const [filter, setFilter] = useState<string | null>(null);
 
-  const [{ data, fetching, error }] = useQuery({
-    query: PeopleQuery,
+  const [{ data, fetching, error }] = useGetPeopleQuery({
     variables: { species: filter },
   });
 
-  console.log(data, error, "err");
   if (error) {
-    return <div>Oh no... {error.message}</div>;
+    console.log(error.message, "error");
   }
 
+  if (fetching && !data) {
+    return <Loader />;
+  }
   return (
     <>
-      <Filters options={options} />
+      <Filters setFilter={setFilter} options={options} />
       <div className="grid grid-cols-3 gap-8 px-8 text-center animate-fadeUp animate-fadeDown max-w-7xl">
         {!fetching &&
           data.people &&
-          data.people.map((person: Character, i: number) => (
+          data.people.map((person: Person, i: number) => (
             <Link to={`${person.id}`} key={i}>
-              <Card {...person} />
+              <Card {...person} flip={false} />
             </Link>
           ))}
       </div>

@@ -1,0 +1,22 @@
+query GetPeople($species: String) {
+  people(species: $species) {
+    id
+    name
+    age
+    species
+    alias
+    imageUrl
+  }
+}
+
+query GetPerson($id: String!) {
+  person(id: $id) {
+    id
+    species
+    name
+    age
+    alias
+    imageUrl
+    occupation
+  }
+}
