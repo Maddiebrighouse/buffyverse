@@ -19,7 +19,7 @@ export default {
         fadeUp: "fade-up 1s ease-in",
         fadeDown: "fade-down 3s ease-in",
         fadeInRight: "fade-in-right 2s ease-in",
-        fadeLeft: "fade-out-left 3s ease-out",
+        fadeLeft: "fade-out-left 1s ease-out",
       },
       keyframes: {
         "fade-up": {
