@@ -5,7 +5,6 @@ import { Person } from "../graphql/graphql";
 
 type Props = Person & { flip?: boolean };
 const Card: React.FC<Props> = ({
-  id,
   name,
   alias,
   species,
@@ -20,50 +19,51 @@ const Card: React.FC<Props> = ({
     "relative w-full h-full duration-1000 preserve-3d bg-[url('src/assets/frames/texture.jpg')] bg-cover rounded-3xl";
 
   return (
-    <div className="w-[300px] h-[550px] group perspective">
+    <div className="w-[300px] h-[504px] group perspective">
       <div className={flip ? filpClass : noFilpClass}>
-        <div className="absolute flex-col justify-around w-full h-full p-2 border-2 backface-hidden border-amber-400 rounded-3xl ">
-          <div className="m-3 text-3xl text-black font-almendra">{alias}</div>
-          <div className="m-2 border-4 border-amber-400 rounded-3xl">
+        <div className="absolute flex-col justify-around w-full h-full p-1 border-2 backface-hidden border-amber-400 rounded-3xl ">
+          <div className="absolute z-10 w-1/2 ml-16 text-3xl text-black border-2 rounded-md font-almendra bg-slate-100 border-amber-400">
+            {alias}
+          </div>
+          <div className="mt-4 border-4 border-amber-400 rounded-3xl">
             <img
-              className="object-cover w-[280px] grayscale h-[430px] rounded-2xl hover:grayscale-0"
+              className="object-cover w-[300px] grayscale h-[470px] rounded-2xl hover:grayscale-0"
               src={imageUrl}
               alt=""
             />
           </div>
-          <div className="ml-3">
-            <Badge icon={species} />
-          </div>
         </div>
 
         <div className="absolute flex-col justify-around w-full h-full p-2 overflow-hidden border-2 my-rotate-y-180 backface-hidden border-amber-400 rounded-3xl">
-          <div className="w-[280px] h-[460px] p-2 mt-4 pt-2 pb-2 mb-4 justify-around border-amber-400 rounded-3xl border-4 absolute">
+          <div className="w-[280px] h-[475px] mt-3 pt-2 justify-around border-amber-400 rounded-3xl border-4 font-almendra absolute">
             <Age age={age} />
             <br />
+            <div className="flex m-1 text-3xl text-black">{name}</div>
+            <br />
             <div className="flex text-xl">
-              <div className="font-almendra">Occupations: </div>
-              <div className="flex text-l rounded-3xl font-lacquer">
-                {occupation}
+              <div className="p-1 m-1">Species: </div>
+              <div className="pt-1 m-1">{species}</div>
+            </div>
+            <div className="flex text-xl">
+              <div className="p-1 m-1">Occupations: </div>
+              <div className="flex-wrap pt-1 m-1">{occupation}</div>
+            </div>
+            <div className="flex-col text-xl">
+              <div className="p-1 m-1">About: </div>
+              <div className="overflow-hidden text-sm">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Voluptatum, quibusdam. Quisquam, voluptatum. Quisquam, quia
+                voluptas. Quisquam, voluptatum. Quisquam, quia voluptas.quia
+                voluptas. Quisquam, voluptatum. Quisquam, quia voluptas.quia
+                voluptas. Quisquam, voluptatum. Quisquam, quia voluptas. elit.
+                Voluptatum, quibusdam. Quisquam, voluptatum. Quisquam, quia
+                voluptas. Quisquam, voluptatum. Quisquam, quia voluptas.quia
               </div>
             </div>
             <br />
-            <div className="flex text-xl">
-              <div className="p-1 m-1 font-almendra">Species: </div>
-              <div className="flex p-1 m-1 text-l rounded-3xl font-lacquer">
-                {species}
-              </div>
+            <div className="flex-col-reverse text-xl">
+              <Badge icon={species} />
             </div>
-            <div className="flex-col text-xl">
-              <div className="p-1 m-1 font-almendra">About: </div>
-              <div className="flex p-1 m-1 overflow-hidden text-l rounded-3xl font-lacquer">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Voluptatum, quibusdam. Quisquam, voluptatum. Quisquam, quia
-                voluptas. Quisquam, voluptatum. Quisquam, quia voluptas.
-              </div>
-            </div>
-          </div>
-          <div className="absolute text-3xl text-black bottom-4 left-14 font-almendra">
-            {name}
           </div>
         </div>
       </div>
