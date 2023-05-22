@@ -17,13 +17,13 @@ const Character = () => {
     <div className="flex justify-between mx-auto text-center animate-fadeInRight">
       {!fetching && data.person && <Card {...data.person} flip={true} />}
       <div className="flex-col">
-        <div className="mb-3 ml-2 text-3xl bg-cover font-almendra bg-texture rounded-2xl">
+        <div className="mb-3 ml-2 text-3xl text-white font-lacquer rounded-2xl">
           Close Friends
         </div>
       </div>
       <Link
         to="/"
-        className="w-10 h-10 rounded-md font-longCang text-white text-5xl px-3.5 py-2.5"
+        className="w-10 h-10 pl-5 ml-5 text-5xl text-white rounded-md font-lacquer"
       >
         X
       </Link>

@@ -5,28 +5,11 @@ import { useState } from "react";
 import Loader from "../components/Loader";
 import { useGetPeopleQuery, Person } from "../graphql/graphql";
 
-export type Filter = {
-  species: string;
-  icon: string;
-};
-
-const options: Filter[] = [
-  { species: "Human", icon: "👩‍🦱" },
-  { species: "Vampire", icon: "🧛" },
-  { species: "Werewolf", icon: "🐺" },
-  { species: "Witch", icon: "🧙" },
-  { species: "Big Bad", icon: "👹" },
-  { species: "Demon", icon: "👿" },
-  { species: "Watcher", icon: "👓" },
-  { species: "Slayer", icon: "🗡️" },
-  { species: "Other", icon: "👽" },
-];
-
 const Deck = () => {
   const [filter, setFilter] = useState<string | null>(null);
 
   const [{ data, fetching, error }] = useGetPeopleQuery({
-    variables: { species: filter },
+    variables: { filter },
   });
 
   if (error) {

@@ -1,14 +1,32 @@
 import { Fragment, useState } from "react";
 import { Popover, Transition } from "@headlessui/react";
-import { Filter } from "../Pages/Deck";
+
+export type Filter = {
+  species: string;
+  icon: string;
+};
+
+const options: Filter[] = [
+  { species: "Human", icon: "👩‍🦱" },
+  { species: "Vampire", icon: "🧛" },
+  { species: "Werewolf", icon: "🐺" },
+  { species: "Witch", icon: "🧙" },
+  { species: "Demon", icon: "👿" },
+  { species: "Watcher", icon: "👓" },
+  { species: "Slayer", icon: "🗡️" },
+  { species: "Robot", icon: "🤖" },
+  { species: "Key", icon: "🔑" },
+  { species: "Other", icon: "👽" },
+];
 
 type Props = {
-  options: Filter[];
   setFilter: (species: string | null) => void;
 };
-export const Filters: React.FC<Props> = ({ options, setFilter }) => {
+export const Filters: React.FC<Props> = ({ setFilter }) => {
+  // TODO: Create a way to highlight the selected filter on the filter button. Debug if active
   const [selected, setSelected] = useState<string | null>(null);
 
+  // To check if filter is already set.
   const handleClick = (species: string) => {
     if (species === selected) {
       setSelected(null);
