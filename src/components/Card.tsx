@@ -47,6 +47,12 @@ const Card: React.FC<Props> = ({
               <div className="p-1 m-1">Occupations: </div>
               <div className="flex-wrap pt-1 m-1">{occupation}</div>
             </div>
+            <div className="flex text-xl">
+              <div className="p-1 m-1">Starred In: </div>
+              {/* <div className="flex-wrap pt-1 m-1">{starred_in}</div> */}
+              <img className="w-8 h-8" src="src/assets/A_icon.jpg" alt="" />
+              <img className="w-8 h-8" src="src/assets/B_icon.png" alt="" />
+            </div>
             <div className="flex-col text-xl">
               <div className="p-1 m-1">About: </div>
               <div className="overflow-hidden text-sm">
@@ -55,8 +61,6 @@ const Card: React.FC<Props> = ({
                 voluptas. Quisquam, voluptatum. Quisquam, quia voluptas.quia
                 voluptas. Quisquam, voluptatum. Quisquam, quia voluptas.quia
                 voluptas. Quisquam, voluptatum. Quisquam, quia voluptas. elit.
-                Voluptatum, quibusdam. Quisquam, voluptatum. Quisquam, quia
-                voluptas. Quisquam, voluptatum. Quisquam, quia voluptas.quia
               </div>
             </div>
             <br />
