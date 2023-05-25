@@ -1,5 +1,5 @@
 overwrite: true
-schema: "http://localhost:8080/graphql"
+schema: "backend/schema.graphql"
 documents:
   - "src/graphql/**/*.graphql"
 generates:
@@ -7,3 +7,4 @@ generates:
     plugins:
       - typescript
       - typescript-urql
+      - typescript-operations
