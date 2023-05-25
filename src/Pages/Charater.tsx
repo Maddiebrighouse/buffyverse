@@ -5,15 +5,15 @@ import { useGetPersonQuery } from "../graphql/graphql";
 const relationships = [
   { typeRelationships: "Love Interest: ", name: "Buffy Summers", id: "1" },
   { typeRelationships: "Love Interest: ", name: "Willow Rosenberg", id: "2" },
-  { typeRelationships: "Love Interest: ", name: "Cordelia Chase", id: "3" },
-  { typeRelationships: "Love Interest: ", name: "Anya Jenkins", id: "4" },
-  { typeRelationships: "Love Interest: ", name: "Tara Maclay", id: "5" },
+  { typeRelationships: "Love Interest: ", name: "Cordelia Chase", id: "14" },
+  { typeRelationships: "Love Interest: ", name: "Anya Jenkins", id: "6" },
+  { typeRelationships: "Love Interest: ", name: "Tara Maclay", id: "15" },
 ];
 const Character = () => {
   const { charId } = useParams();
 
   const [{ data, fetching, error }] = useGetPersonQuery({
-    variables: { id: charId },
+    variables: { id: charId ? charId : "" },
   });
 
   if (error) {
@@ -22,7 +22,9 @@ const Character = () => {
 
   return (
     <div className="flex justify-between mx-auto text-center animate-fadeInRight">
-      {!fetching && data.person && <Card {...data.person} flip={true} />}
+      {!fetching && data && data.person && (
+        <Card {...data.person} flip={true} />
+      )}
       <div className="flex-col">
         <div className="mb-3 ml-2 text-3xl text-white font-lacquer rounded-2xl">
           Close Friends

@@ -1,9 +1,19 @@
 import React from "react";
 import { Badge } from "./Species";
 import Age from "./Age";
-import { Person } from "../graphql/graphql";
 
-type Props = Person & { flip?: boolean };
+export type PersonCard = {
+  id: string;
+  name: string;
+  alias: string;
+  species?: string | null;
+  imageUrl: string;
+  age?: number;
+  occupation?: string | null;
+  starred_in?: string;
+};
+
+type Props = PersonCard & { flip?: boolean };
 const Card: React.FC<Props> = ({
   name,
   alias,
@@ -36,7 +46,7 @@ const Card: React.FC<Props> = ({
 
         <div className="absolute flex-col justify-around w-full h-full p-2 overflow-hidden border-2 my-rotate-y-180 backface-hidden border-amber-400 rounded-3xl">
           <div className="w-[280px] h-[475px] mt-3 pt-2 justify-around border-amber-400 rounded-3xl border-4 font-almendra absolute">
-            <Age age={age} />
+            {age && <Age age={age} />}
             <br />
             <div className="flex m-1 text-3xl text-black">{name}</div>
             <div className="flex text-xl">
@@ -64,9 +74,11 @@ const Card: React.FC<Props> = ({
               </div>
             </div>
             <br />
-            <div className="flex-col-reverse text-xl">
-              <Badge icon={species} />
-            </div>
+            {species && (
+              <div className="flex-col-reverse text-xl">
+                <Badge icon={species} />
+              </div>
+            )}
           </div>
         </div>
       </div>

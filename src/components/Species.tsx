@@ -1,3 +1,7 @@
+interface BadgeProps {
+  icon: string;
+}
+
 const defaultIcon = "src/assets/icons/watcher.png";
 
 const whichIcon = (species: string) => {
@@ -27,7 +31,7 @@ const whichIcon = (species: string) => {
   }
 };
 
-export const Badge = ({ icon }: string) => {
+export const Badge: React.FC<BadgeProps> = ({ icon }) => {
   const speciesIcon = whichIcon(icon);
   return (
     <div className="relative">
@@ -36,8 +40,6 @@ export const Badge = ({ icon }: string) => {
           className="absolute w-10 h-10 pt-1 pl-1 grayscale-0 left-1 mix-blend-darken"
           src={speciesIcon}
         />
-
-        <p className="pt-2 pl-1 text-2xl text-black font-grenze"></p>
       </div>
     </div>
   );

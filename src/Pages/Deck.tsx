@@ -3,13 +3,13 @@ import Card from "../components/Card";
 import { Filters } from "../components/Filter";
 import { useState } from "react";
 import Loader from "../components/Loader";
-import { useGetPeopleQuery, Person } from "../graphql/graphql";
+import { useGetPeopleQuery } from "../graphql/graphql";
 
 const Deck = () => {
   const [filter, setFilter] = useState<string | null>(null);
 
   const [{ data, fetching, error }] = useGetPeopleQuery({
-    variables: { filter },
+    variables: { species: filter },
   });
 
   if (error) {
@@ -24,8 +24,9 @@ const Deck = () => {
       <Filters setFilter={setFilter} />
       <div className="grid grid-cols-3 gap-8 px-8 text-center animate-fadeUp animate-fadeDown max-w-7xl">
         {!fetching &&
+          data &&
           data.people &&
-          data.people.map((person: Person, i: number) => (
+          data.people.map((person, i) => (
             <Link to={`${person.id}`} key={i}>
               <Card {...person} flip={false} />
             </Link>

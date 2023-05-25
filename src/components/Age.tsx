@@ -1,4 +1,8 @@
-const Age = ({ age }: number) => {
+interface Props {
+  age: number;
+}
+
+const Age: React.FC<Props> = ({ age }) => {
   return (
     <div className="relative">
       <p className="absolute z-10 p-2 text-5xl text-black -pl-8 right-20 opacity-80 -rotate-12 -top-6 font-lacquer">
