@@ -22,7 +22,7 @@ export type Person = {
   id: Scalars['String'];
   imageUrl: Scalars['String'];
   name: Scalars['String'];
-  occupation: Scalars['String'];
+  occupation?: Maybe<Scalars['String']>;
   species?: Maybe<Scalars['String']>;
 };
 
@@ -50,18 +50,12 @@ export type Relationship = {
   type: Scalars['String'];
 };
 
-export type _Service = {
-  __typename?: '_Service';
-  sdl: Scalars['String'];
-};
-
 
 export const GetPeopleDocument = gql`
     query GetPeople($species: String) {
   people(species: $species) {
     id
     name
-    age
     species
     alias
     imageUrl
@@ -89,3 +83,16 @@ export const GetPersonDocument = gql`
 export function useGetPersonQuery(options: Omit<Urql.UseQueryArgs<GetPersonQueryVariables>, 'query'>) {
   return Urql.useQuery<GetPersonQuery, GetPersonQueryVariables>({ query: GetPersonDocument, ...options });
 };
+export type GetPeopleQueryVariables = Exact<{
+  species?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type GetPeopleQuery = { __typename?: 'Query', people: Array<{ __typename?: 'Person', id: string, name: string, species?: string | null, alias: string, imageUrl: string }> };
+
+export type GetPersonQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetPersonQuery = { __typename?: 'Query', person: { __typename?: 'Person', id: string, species?: string | null, name: string, age: number, alias: string, imageUrl: string, occupation?: string | null } };
