@@ -11,7 +11,6 @@ import (
 	"github.com/graph-gophers/graphql-go"
 	"github.com/graph-gophers/graphql-go/relay"
 	"github.com/jackc/pgx/v4/pgxpool"
-	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 )
 
@@ -40,13 +39,6 @@ type Person struct {
 type PersonResolver struct {
 	Person *Person
 	People []*Person
-}
-
-func init() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal(err)
-	}
 }
 
 func (q *Query) Person(ctx context.Context, args struct{ ID string }) (*PersonResolver, error) {
@@ -144,8 +136,7 @@ func (p *PersonResolver) Occupation() string {
 // }
 
 func main() {
-	path := os.Getenv("DATABASE_URL")
-	config, err := pgxpool.ParseConfig(path)
+	config, err := pgxpool.ParseConfig("postgresql://localhost:5432/buffy_verse_1?sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}
