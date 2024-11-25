@@ -24,16 +24,21 @@ Before running the Buffyverse web project, make sure you have the following prer
 - Golang
 - PostgreSQL
 
-## Getting Started
+## Getting Started Frontend
 
 To get started with the Buffyverse web project, follow these steps:
 
 1. Clone the project repository from GitHub.
 2. Install the front-end dependencies by running `npm install` or `yarn install`.
 3. Start the front-end development server using Vite.js by running `npm run dev` or `yarn dev`.
-4. Configure the backend server to connect to your local PostgreSQL database. Update the necessary configuration files or environment variables.
-5. Install the backend dependencies by running `go mod download`.
-6. In a separate terminal window, start the backend server by running `go run server.go`.
+
+## Getting Started Backend
+
+[Backend README](./backend/README.md)
+
+1. `cd backend` to navigate to the backend directory.
+2. Install the backend dependencies by running `go mod download`.
+3. Start the backend server by running `go run main.go`.
 
 ## Usage
 
